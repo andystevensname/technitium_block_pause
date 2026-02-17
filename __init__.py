@@ -10,7 +10,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     # Set up Technitium Block Pause from a config entry
     from .api import TechnitiumApi
-    from .coordinator import TechnitiumDataUpdateCoordinator
+    from .coordinator import TechnitiumBlockPauseDataUpdateCoordinator
     hass.data.setdefault(DOMAIN, {})
     host = entry.data["host"]
     api_key = entry.data["api_key"]
@@ -20,7 +20,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     pause_max = options.get("pause_max", 3600)
     api_timeout = options.get("api_timeout", 10)
     api = TechnitiumApi(host, api_key, api_timeout)
-    coordinator = TechnitiumDataUpdateCoordinator(hass, api, update_interval)
+    coordinator = TechnitiumBlockPauseDataUpdateCoordinator(hass, api, update_interval)
     await coordinator.async_config_entry_first_refresh()
     hass.data[DOMAIN][entry.entry_id] = {"api": api, "coordinator": coordinator, "pause_min": pause_min, "pause_max": pause_max}
 

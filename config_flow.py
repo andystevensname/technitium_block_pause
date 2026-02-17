@@ -2,12 +2,14 @@
 from homeassistant import config_entries
 from homeassistant.helpers import config_validation as cv
 
+
 class TechnitiumBlockPauseOptionsFlowHandler(config_entries.OptionsFlow):
     def __init__(self, config_entry):
-        self.config_entry = config_entry
+        super().__init__()
+        self._config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
-        options = self.config_entry.options
+        options = self._config_entry.options
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
 
