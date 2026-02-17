@@ -1,6 +1,8 @@
-
+import voluptuous as vol
 from homeassistant import config_entries
+from homeassistant.const import CONF_HOST, CONF_API_KEY
 from homeassistant.helpers import config_validation as cv
+from .const import DOMAIN
 
 
 class TechnitiumBlockPauseOptionsFlowHandler(config_entries.OptionsFlow):
@@ -20,10 +22,6 @@ class TechnitiumBlockPauseOptionsFlowHandler(config_entries.OptionsFlow):
             vol.Optional("api_timeout", default=options.get("api_timeout", 10)): vol.All(int, vol.Range(min=1, max=60)),
         })
         return self.async_show_form(step_id="init", data_schema=data_schema)
-import voluptuous as vol
-from homeassistant import config_entries
-from homeassistant.const import CONF_HOST, CONF_API_KEY
-from .const import DOMAIN
 
 class TechnitiumBlockPauseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
