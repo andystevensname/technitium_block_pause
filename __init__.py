@@ -1,7 +1,7 @@
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 
-DOMAIN = "technitium-block-pause"
+from .const import DOMAIN
 
 async def async_setup(hass: HomeAssistant, config: dict):
     # Set up the Technitium Block Pause integration (no config needed)
