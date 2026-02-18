@@ -10,6 +10,15 @@ A Home Assistant custom integration to monitor and control ad blocking on a [Tec
 - **Device grouping** - Entities grouped under a Technitium device in the UI
 - **Connection validation** - Tests connection during setup
 
+## Compatibility
+
+| Software | Tested Version |
+|----------|----------------|
+| Home Assistant | 2026.2.2 |
+| Technitium DNS Server | v14.3 |
+
+*Other versions may work but have not been tested.*
+
 ## Installation
 
 ### Manual Installation
