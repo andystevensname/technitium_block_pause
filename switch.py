@@ -1,10 +1,11 @@
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
+from .const import DOMAIN, DEFAULT_NAME
 
 
 async def async_setup_entry(
@@ -23,13 +24,31 @@ async def async_setup_entry(
 class TechnitiumBlockingSwitch(CoordinatorEntity, SwitchEntity):
     """Switch to toggle Technitium ad blocking."""
 
-    def __init__(self, coordinator, api, entry):
+    _attr_has_entity_name = True
+
+    def __init__(self, coordinator, api, entry: ConfigEntry):
         """Initialize the switch."""
         super().__init__(coordinator)
         self._api = api
-        self._attr_name = "Technitium Ad Blocking"
+        self._entry = entry
+        self._attr_name = "Ad Blocking"
         self._attr_unique_id = f"{entry.entry_id}_ad_blocking_switch"
-        self._attr_icon = "mdi:shield-check"
+
+    @property
+    def icon(self) -> str:
+        """Return icon based on state."""
+        return "mdi:shield-check" if self.is_on else "mdi:shield-off"
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return device info."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._entry.entry_id)},
+            name=self._entry.title or DEFAULT_NAME,
+            manufacturer="Technitium",
+            model="DNS Server",
+            configuration_url=self._entry.data.get("host"),
+        )
 
     @property
     def is_on(self) -> bool | None:

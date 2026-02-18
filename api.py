@@ -21,10 +21,17 @@ class TechnitiumApi:
                 data = await resp.json()
                 _LOGGER.debug(f"Technitium status response data: {data}")
                 response = data.get("response", {})
-                # Check if blocking is enabled (temporaryDisableBlockingTill being null/absent means blocking is active)
+                # Check both enableBlocking setting and temporaryDisableBlockingTill
+                enable_blocking = response.get("enableBlocking", True)
                 temp_disable_till = response.get("temporaryDisableBlockingTill")
-                blocking_enabled = temp_disable_till is None or temp_disable_till == ""
-                return {"ad_blocking_status": blocking_enabled}
+                # Blocking is active if enabled AND not temporarily disabled
+                is_temp_disabled = temp_disable_till is not None and temp_disable_till != ""
+                blocking_enabled = enable_blocking and not is_temp_disabled
+                return {
+                    "ad_blocking_status": blocking_enabled,
+                    "enable_blocking": enable_blocking,
+                    "temp_disable_till": temp_disable_till,
+                }
         except Exception as e:
             _LOGGER.error(f"Error fetching Technitium status: {e}")
             return {"ad_blocking_status": None}
