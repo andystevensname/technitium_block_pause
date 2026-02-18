@@ -46,6 +46,38 @@ class TechnitiumApi:
             _LOGGER.error(f"Error pausing ad blocking: {e}")
             return None
 
+    async def enable_ad_blocking(self):
+        """Re-enable ad blocking (cancels any temporary disable)."""
+        url = f"{self._host}/api/settings/set"
+        params = {"token": self._api_key, "enableBlocking": "true"}
+        try:
+            _LOGGER.debug(f"Sending enable blocking request to {url}")
+            async with self._session.get(url, params=params, timeout=self._timeout) as resp:
+                _LOGGER.debug(f"Technitium enable response code: {resp.status}")
+                resp.raise_for_status()
+                data = await resp.json()
+                _LOGGER.debug(f"Technitium enable response data: {data}")
+                return data
+        except Exception as e:
+            _LOGGER.error(f"Error enabling ad blocking: {e}")
+            return None
+
+    async def disable_ad_blocking(self):
+        """Disable ad blocking indefinitely."""
+        url = f"{self._host}/api/settings/set"
+        params = {"token": self._api_key, "enableBlocking": "false"}
+        try:
+            _LOGGER.debug(f"Sending disable blocking request to {url}")
+            async with self._session.get(url, params=params, timeout=self._timeout) as resp:
+                _LOGGER.debug(f"Technitium disable response code: {resp.status}")
+                resp.raise_for_status()
+                data = await resp.json()
+                _LOGGER.debug(f"Technitium disable response data: {data}")
+                return data
+        except Exception as e:
+            _LOGGER.error(f"Error disabling ad blocking: {e}")
+            return None
+
     async def close(self):
         # No need to close Home Assistant's managed session
         pass

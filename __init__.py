@@ -36,8 +36,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         await api.pause_ad_blocking(duration)
         await coordinator.async_request_refresh()
 
+    async def handle_enable_service(call):
+        await api.enable_ad_blocking()
+        await coordinator.async_request_refresh()
+
+    async def handle_disable_service(call):
+        await api.disable_ad_blocking()
+        await coordinator.async_request_refresh()
+
     hass.services.async_register(
         DOMAIN, "pause_ad_blocking", handle_pause_service
+    )
+    hass.services.async_register(
+        DOMAIN, "enable_ad_blocking", handle_enable_service
+    )
+    hass.services.async_register(
+        DOMAIN, "disable_ad_blocking", handle_disable_service
     )
 
     await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
